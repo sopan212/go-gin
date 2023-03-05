@@ -1,9 +1,73 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"golang-basic-gin/config"
+	"golang-basic-gin/models"
+
+	"github.com/gin-gonic/gin"
+)
 
 func GetPosition(c *gin.Context) {
+
+	position := []models.Position{}
+	// config.DB.Find(&position)
+
+	config.DB.Preload("Department").Find(&position)
 	c.JSON(200, gin.H{
-		"message": "Welcome in Position",
+		"message": "Position Page",
+		"data":    position,
+	})
+}
+
+func PostPosition(c *gin.Context) {
+
+	var position models.Position
+	// articel := models.Articels{
+	// 	Title: c.PostForm("title"),
+	// 	Author:c.PostForm("author"),
+	// }
+
+	err := c.ShouldBindJSON(&position)
+	if err != nil {
+		c.AbortWithStatusJSON(400, gin.H{
+			"err":     err.Error(),
+			"message": "Input required fill",
+		})
+		return
+	}
+	config.DB.Create(&position)
+
+	c.JSON(200, gin.H{
+		"message": "success",
+		"data":    position,
+	})
+}
+
+func PutPosition(c *gin.Context) {
+	id := c.Param("id")
+
+	var position models.Position
+
+	var reqPosition models.Position
+
+	c.BindJSON(&reqPosition)
+
+	config.DB.Model(&position).Where("id = ?", id).Updates(reqPosition)
+
+	c.JSON(200, gin.H{
+		"message": "updated",
+		"data":    position,
+	})
+}
+
+func DeletePosition(c *gin.Context) {
+	id := c.Param("id")
+
+	var Position models.Position
+
+	config.DB.Delete(&Position, id)
+
+	c.JSON(200, gin.H{
+		"message": "Delleted",
 	})
 }

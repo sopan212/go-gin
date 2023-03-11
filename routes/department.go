@@ -16,9 +16,31 @@ func GetDepartment(c *gin.Context) {
 	// config.DB.Find(&departments)
 	config.DB.Preload("Positions").Find(&departments)
 
+	respDepartment := []models.ResponseGetDepartment{}
+
+	for _, dept := range departments {
+		respPost := []models.ResponseEachPosition{}
+		for _, post := range dept.Positions {
+			resp := models.ResponseEachPosition{
+				Id:   post.ID,
+				Name: post.Name,
+				Code: post.Code,
+			}
+			respPost = append(respPost, resp)
+		}
+
+		respDept := models.ResponseGetDepartment{
+			Id:       dept.ID,
+			Name:     dept.Name,
+			Code:     dept.Code,
+			Position: respPost,
+		}
+		respDepartment = append(respDepartment, respDept)
+	}
+
 	c.JSON(200, gin.H{
 		"message": "Welcome in department",
-		"data":    departments,
+		"data":    respDepartment,
 	})
 }
 

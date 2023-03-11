@@ -13,9 +13,21 @@ func GetPosition(c *gin.Context) {
 	// config.DB.Find(&position)
 
 	config.DB.Preload("Department").Find(&position)
+
+	respPostion := []models.ResponseEachPosition{}
+
+	for _, post := range position {
+		resp := models.ResponseEachPosition{
+			Id:   post.ID,
+			Name: post.Name,
+			Code: post.Code,
+		}
+
+		respPostion = append(respPostion, resp)
+	}
 	c.JSON(200, gin.H{
 		"message": "Position Page",
-		"data":    position,
+		"data":    respPostion,
 	})
 }
 
@@ -26,15 +38,15 @@ func PostPosition(c *gin.Context) {
 	// 	Title: c.PostForm("title"),
 	// 	Author:c.PostForm("author"),
 	// }
-
-	err := c.ShouldBindJSON(&position)
-	if err != nil {
-		c.AbortWithStatusJSON(400, gin.H{
-			"err":     err.Error(),
-			"message": "Input required fill",
-		})
-		return
-	}
+	c.BindJSON(&position)
+	// err := c.ShouldBindJSON(&position)
+	// if err != nil {
+	// 	c.AbortWithStatusJSON(400, gin.H{
+	// 		"err":     err.Error(),
+	// 		"message": "Input required fill",
+	// 	})
+	// 	return
+	// }
 	config.DB.Create(&position)
 
 	c.JSON(200, gin.H{

@@ -40,7 +40,7 @@ func PostInventory(c *gin.Context) {
 func GetInventory(c *gin.Context) {
 	var inventory []models.Inventory
 
-	config.DB.Preload("Archive").Find(&inventory)
+	config.DB.Preload(clause.Associations).Find(&inventory)
 
 	c.JSON(200, gin.H{
 		"message": "success",

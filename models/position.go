@@ -10,3 +10,9 @@ type Position struct {
 	Department   Department
 	Employees    []Employee `json:"employee"`
 }
+
+type ResponseEachPosition struct {
+	Id   uint   `json:"id"`
+	Name string `json:"name"`
+	Code string `json:"code"`
+}

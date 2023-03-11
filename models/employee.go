@@ -1,6 +1,8 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Employee struct {
 	gorm.Model
@@ -10,4 +12,6 @@ type Employee struct {
 	Email      string `json:"email" binding:"required,email"`
 	PositionID uint   `json:"position_id"`
 	Position   Position
+	//Inventories []Inventory `gorm:"many2many:employee_inventories;"`
+	Inventories []EmployeeInventory `json:"inventories"`
 }

@@ -18,7 +18,8 @@ func InitDB() {
 		panic("failed to connect database")
 	}
 
-	DB.AutoMigrate(&models.Department{}, models.Position{}, &models.Employee{}, &models.Archive{}, &models.Inventory{})
+	DB.AutoMigrate(&models.User{}, &models.Department{}, models.Position{},
+		&models.Employee{}, &models.Inventory{}, &models.Archive{}, &models.EmployeeInventory{})
 
 	// DB.Create(&models.Articels{
 	// Title:"Naruto Shipuden",

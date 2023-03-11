@@ -22,6 +22,12 @@ func main() {
 	{
 		v1.GET("/", GetHome)
 
+		user := v1.Group("/register")
+		{
+
+			user.POST("/", routes.RegisterUser)
+
+		}
 		department := v1.Group("/department")
 		{
 			department.GET("/", routes.GetDepartment)
@@ -58,6 +64,11 @@ func main() {
 			inventory.POST("/", routes.PostInventory)
 			inventory.PUT("/:id", routes.PutInventory)
 			inventory.DELETE("/:id", routes.DeleteInventory)
+		}
+		rental := v1.Group("/rental")
+		{
+			rental.GET("/:id", routes.GetRentalByInventoryID)
+			rental.POST("/", routes.RentalByEmployee)
 		}
 	}
 
